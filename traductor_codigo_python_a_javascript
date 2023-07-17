@@ -1,0 +1,29 @@
+from Analizador_semantico import symbol_table, ast_parsed
+from generardor_codigo_intermedio import intermediate_code
+
+def generate_javascript_code(intermediate_code):
+    javascript_code = []
+
+    for line in intermediate_code:
+        if "=" in line:
+            identifier, expression = line.split("=")
+            identifier = identifier.strip()
+            expression = expression.strip()
+            javascript_code.append(f"let {identifier} = {expression};")
+        elif "print" in line:
+            _, identifier = line.split("(")
+            identifier = identifier.rstrip(")")
+            javascript_code.append(f"console.log({identifier});")
+
+    return javascript_code
+
+try:
+
+    javascript_code = generate_javascript_code(intermediate_code)
+
+    print("\n\n\nJavaScript Code:")
+    for line in javascript_code:
+        print(line)
+
+except SyntaxError as e:
+    print("Syntax error:", str(e))
